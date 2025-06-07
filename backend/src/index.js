@@ -1,0 +1,10 @@
+import express from "express";
+
+import authRoutes from "./routes/auth.route";
+const app = express();
+
+app.use("/api/auth", authRoutes);
+
+app.listen(5001, () => {
+  console.log("Сервер запущений на 5001 порті.");
+});
