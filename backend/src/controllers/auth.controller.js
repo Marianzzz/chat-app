@@ -3,6 +3,7 @@ import { db } from "../lib/db.js";
 import { eq } from "drizzle-orm";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../lib/util.js";
+import cloudinary from "../lib/cloudinary.js";
 
 export async function signup(req, res) {
   const { fullName, email, password } = req.body;
@@ -57,10 +58,7 @@ export async function signup(req, res) {
 export async function login(req, res) {
   const { email, password } = req.body;
   try {
-    const user = await db
-      .select()
-      .from(users)
-      .where(eq(users.email, email));
+    const user = await db.select().from(users).where(eq(users.email, email));
 
     const existingUser = user[0];
 
@@ -91,13 +89,55 @@ export async function login(req, res) {
   }
 }
 
-
 export function logout(req, res) {
   try {
     res.cookie("jwt", "", { maxAge: 0 });
     res.status(200).json({ message: "Вихід успішний" });
   } catch (error) {
     console.error("Помилка в контролері виходу:", error.message);
+    res.status(500).json({ message: "Внутрішня помилка сервера" });
+  }
+}
+
+export async function updateProfile(req, res) {
+  try {
+    const { profilePic } = req.body;
+    const userId = req.user.id;
+
+    if (!profilePic) {
+      return res
+        .status(400)
+        .json({ message: "Профільне зображення обов'язкове" });
+    }
+
+    const uploadResponse = await cloudinary.uploader.upload(profilePic);
+
+    const result = await db
+      .update(users)
+      .set({
+        profilePic: uploadResponse.secure_url,
+      })
+      .where(eq(users.id, userId))
+      .returning();
+
+    const updatedUser = result[0];
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Користувача не знайдено" });
+    }
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    console.error("Помилка при оновленні профілю:", error.message);
+    res.status(500).json({ message: "Внутрішня помилка сервера" });
+  }
+}
+
+export function checkAuth(req, res) {
+  try {
+    res.status(200).json(req.user);
+  } catch (error) {
+    console.error("Помилка при перевірки аутентифікації:", error.message);
     res.status(500).json({ message: "Внутрішня помилка сервера" });
   }
 }
