@@ -54,10 +54,50 @@ export async function signup(req, res) {
   }
 }
 
-export function login(req, res) {
-  res.send("login route");
+export async function login(req, res) {
+  const { email, password } = req.body;
+  try {
+    const user = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, email));
+
+    const existingUser = user[0];
+
+    if (!existingUser) {
+      return res.status(400).json({ message: "Недісні облікові дані" });
+    }
+
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      existingUser.password
+    );
+
+    if (!isPasswordCorrect) {
+      return res.status(400).json({ message: "Пароль не вірний" });
+    }
+
+    generateToken(existingUser.id, res);
+
+    res.status(200).json({
+      id: existingUser.id,
+      fullName: existingUser.fullName,
+      email: existingUser.email,
+      profilePic: existingUser.profilePic,
+    });
+  } catch (error) {
+    console.error("Помилка в контролері входу:", error.message);
+    res.status(500).json({ message: "Внутрішня помилка сервера" });
+  }
 }
 
+
 export function logout(req, res) {
-  res.send("logout route");
+  try {
+    res.cookie("jwt", "", { maxAge: 0 });
+    res.status(200).json({ message: "Вихід успішний" });
+  } catch (error) {
+    console.error("Помилка в контролері виходу:", error.message);
+    res.status(500).json({ message: "Внутрішня помилка сервера" });
+  }
 }
