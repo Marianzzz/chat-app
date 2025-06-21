@@ -12,10 +12,10 @@ export default function LoginPage() {
   });
   const { login, isLoggingIn } = useAuthStore();
 
-  const handleSubmit = async (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
     login(formData);
-  };
+  }
 
   return (
     <div className="h-screen grid lg:grid-cols-2">
