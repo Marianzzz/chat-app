@@ -19,7 +19,7 @@ export default function ChatHeader() {
           <div>
             <h3 className="font-medium">{selectedUser.fullName}</h3>
             <p className="text-sm text-base-content/70">
-              {onlineUsers.includes(selectedUser._id) ? "У мережі" : "Не у мережі"}
+              {onlineUsers.includes(selectedUser.id) ? "У мережі" : "Не у мережі"}
             </p>
           </div>
         </div>
