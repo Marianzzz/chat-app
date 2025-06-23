@@ -39,7 +39,7 @@ export default function ChatContainer() {
                       ? authUser.profilePic || "/avatar.png"
                       : selectedUser.profilePic || "/avatar.png"
                   }
-                  alt="profile pic"
+                  alt="Зображення користувача"
                 />
               </div>
             </div>
@@ -52,7 +52,7 @@ export default function ChatContainer() {
               {message.image && (
                 <img
                   src={message.image}
-                  alt="Attachment"
+                  alt="Вкладене зображення"
                   className="sm:max-w-[200px] rounded-md mb-2"
                 />
               )}
