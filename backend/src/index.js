@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import cors from "cors";
-import { app, server } from "./lib/socket.js";
+import { app, server, io } from "./lib/socket.js";
 
 import "./lib/db.js";
 
