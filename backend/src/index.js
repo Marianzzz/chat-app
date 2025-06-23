@@ -6,7 +6,7 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/auth.route.js";
 import messageRoutes from "./routes/message.route.js";
 import cors from "cors";
-import { app, server, io } from "./lib/socket.js";
+import { app, server } from "./lib/socket.js";
 
 import "./lib/db.js";
 
@@ -23,14 +23,6 @@ app.use(
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
-
-io.on("connection", (socket) => {
-  console.log("Користувач приєдано", socket.id);
-
-  socket.on("disconnect", () => {
-    console.log("Користувача відключено", socket.id);
-  });
-});
 
 server.listen(PORT, () => {
   console.log("server is running on PORT:" + PORT);
