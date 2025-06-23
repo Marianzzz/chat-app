@@ -2,6 +2,7 @@ import { ne, and, or, eq } from "drizzle-orm";
 import { db } from "../lib/db.js";
 import { users, messages } from "../lib/schema.js";
 import cloudinary from "../lib/cloudinary.js";
+import { getReceiverSocketId } from "../lib/socket.js";
 
 export async function getUsersForSidebar(req, res) {
   try {
@@ -72,6 +73,11 @@ export async function sendMessage(req, res) {
         image: imageUrl,
       })
       .returning();
+
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+    }
     res.status(201).json(newMessage);
   } catch (error) {
     console.error("Помилка в sendMessage controller:", error.message);
