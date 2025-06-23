@@ -57,11 +57,13 @@ export const useAuthStore = create((set, get) => ({
       await axiosInstance.post("/auth/logout");
       set({ authUser: null });
       toast.success("Вихід успішний");
-      get.disconnectSocket();
+      get().disconnectSocket();
     } catch (error) {
-      toast.error(error.response.data.message);
+      console.error("Logout error:", error);
+      toast.error(error?.response?.data?.message || "Помилка при виході");
     }
   },
+
   updateProfile: async (data) => {
     set({ isUpdatingProfile: true });
     try {
@@ -83,6 +85,10 @@ export const useAuthStore = create((set, get) => ({
     set({ socket: socket });
   },
   disconnectSocket: () => {
-    if (get().socket?.connected) get().socket.disconnect();
+    const socket = get().socket;
+    if (socket?.connected) {
+      socket.disconnect();
+    }
+    set({ socket: null });
   },
 }));
