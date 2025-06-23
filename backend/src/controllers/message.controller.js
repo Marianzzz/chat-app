@@ -2,7 +2,7 @@ import { ne, and, or, eq } from "drizzle-orm";
 import { db } from "../lib/db.js";
 import { users, messages } from "../lib/schema.js";
 import cloudinary from "../lib/cloudinary.js";
-import { getReceiverSocketId } from "../lib/socket.js";
+import { getReceiverSocketId, io } from "../lib/socket.js";
 
 export async function getUsersForSidebar(req, res) {
   try {
