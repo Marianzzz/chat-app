@@ -23,21 +23,23 @@ export default function Sidebar() {
   return (
     <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
       <div className="border-b border-base-300 w-full p-5">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center lg:justify-start justify-center gap-2">
           <Users className="size-6" />
           <span className="font-medium hidden lg:block">Контакти</span>
         </div>
-        <div className="mt-3 hidden lg:flex items-center gap-2">
-          <label className="cursor-pointer flex items-center gap-2">
+        <div className="mt-3 lg:flex items-center text-center gap-2">
+          <label className="cursor-pointer flex items-center justify-center gap-2">
             <input
               type="checkbox"
               checked={showOnlineOnly}
               onChange={(e) => setShowOnlineOnly(e.target.checked)}
               className="checkbox checkbox-sm"
             />
-            <span className="text-sm">Показати у мережі тільки</span>
+            <span className="text-sm hidden lg:inline">
+              Показати у мережі тільки
+            </span>
           </label>
-          <span className="text-xs text-zinc-500">
+          <span className="text-xs text-center text-zinc-500">
             ({onlineUsers.length - 1} у мережі)
           </span>
         </div>
@@ -77,7 +79,9 @@ export default function Sidebar() {
           </button>
         ))}
         {filteredUsers.length === 0 && (
-          <div className="text-center text-zinc-500 py-4">Немає користувачів у мережі</div>
+          <div className="text-center text-zinc-500 py-4 text-xs lg:text-lg">
+            Немає користувачів у мережі
+          </div>
         )}
       </div>
     </aside>
