@@ -1,4 +1,4 @@
-import experss from "express";
+import express from "express";
 import {
   login,
   logout,
@@ -8,7 +8,7 @@ import {
 } from "../controllers/auth.controller.js";
 import { protectRoute } from "../middleware/auth.middleware.js";
 
-const router = experss.Router();
+const router = express.Router();
 
 router.post("/signup", signup);
 
