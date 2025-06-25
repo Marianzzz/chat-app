@@ -64,7 +64,7 @@ export async function sendMessage(req, res) {
       const uploadResponse = await cloudinary.uploader.upload(image);
       imageUrl = uploadResponse.secure_url;
     }
-    const newMessage = await db
+    const [message] = await db
       .insert(messages)
       .values({
         senderId,
@@ -76,9 +76,9 @@ export async function sendMessage(req, res) {
 
     const receiverSocketId = getReceiverSocketId(receiverId);
     if (receiverSocketId) {
-      io.to(receiverSocketId).emit("newMessage", newMessage);
+      io.to(receiverSocketId).emit("newMessage", message); 
     }
-    res.status(201).json(newMessage);
+    res.status(201).json(message); 
   } catch (error) {
     console.error("Помилка в sendMessage controller:", error.message);
     res.status(500).json({ error: "Внутрішня помилка сервера" });
